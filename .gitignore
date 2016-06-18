@@ -1,0 +1,5 @@
+#ignore blender files
+blender/*
+
+#ignore babylon log files
+maps/*.log
