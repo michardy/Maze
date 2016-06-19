@@ -1,9 +1,6 @@
 var engine;
 var canvas;
 var scene;
-var meshesColliderList = [];
-
-//document.getElementById("viewport").requestPointerLock();
 
 canvas = document.getElementById("viewport");
 canvas.requestPointerLock = canvas.requestPointerLock ||
@@ -20,24 +17,32 @@ function startGame(){
 		console.log(canvas);
 		engine = new BABYLON.Engine(canvas, true);
 		engine.isPointerLock = true;
-		BABYLON.SceneLoader.Load("maps/", "l1map_nav.babylon", engine, function (loadedScene){
-		//BABYLON.SceneLoader.Load("Espilit/", "Espilit.babylon", engine, function (loadedScene) {
+		BABYLON.SceneLoader.Load("maps/", "l1map.babylon", engine, function (loadedScene){
 			scene = loadedScene;
 			scene.enablePhysics(new BABYLON.Vector3(0, -10, 0), new BABYLON.OimoJSPlugin());
-			scene.activeCamera.onCollide = function (colmesh){
-				//console.log(colmesh.name)
-				if (colmesh.name === "Sphere"){
+			cam = scene.getCameraByID("Camera");
+			light = scene.getLightByID("FlashLight");
+			plane = scene.getMeshByID("Plane");
+			pbox = scene.getMeshByID("pbox");
+			//var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+			//shadowGenerator.getShadowMap().renderList.push(plane);
+			light.parent = cam;
+			pbox.parent = cam;
+			scene.setActiveCameraByID("Camera");
+			console.log(scene.activeCamera.name);
+			pbox.onCollide = function (colmesh){
+				if (colmesh.name === "Enemy"){
 					activeCamera.position = new BABYLON.Vector3(0,3.811,0)
 				}
 			}
             scene.executeWhenReady(function () {
                 scene.activeCamera.attachControl(canvas);
+				alert("Click on the game to enable pointer lock and hide your cursor.  ");
                 engine.runRenderLoop(function () {
                     scene.render();
                 });
             });
         }, function (progress) {
-            // To do: give progress feedback to user
 		});
 	}
 }
