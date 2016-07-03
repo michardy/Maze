@@ -60,7 +60,7 @@ function gNextPoint(position, target){
 		return(position);
 	}
 	var x1 = d*z1;
-	if (ot){
+	/*if (ot){
 		var td = new Date().getTime()- ot;
 		ot = new Date().getTime();
 		if (!td){
@@ -68,13 +68,14 @@ function gNextPoint(position, target){
 		}
 	}else{
 		var td = 1
-	}
+	}*/
+	td = engine.getFps()/1000*16.6666666666666666666;
 	x1 = sx*x1*16;
 	z1 = sz*z1*16;
 	x1 = x1/1000;
 	z1 = z1/1000;
-	x1 *= td;
-	z1 *= td;
+	x1 /= td;
+	z1 /= td;
 	return(new BABYLON.Vector3(position['x']+x1,position['y'],position['z']+z1));
 }
 
