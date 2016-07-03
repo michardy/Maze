@@ -41,8 +41,8 @@ function gNextPoint(position, target){
 	var x1 = d*z1;
 	x1 = sx*x1;
 	z1 = sz*z1;
-	x1 = x1/1000;
-	z1 = z1/1000;
+	x1 = x1/50;
+	z1 = z1/50;
 	return(new BABYLON.Vector3(position['x']+x1,position['y'],position['z']+z1));
 }
 
