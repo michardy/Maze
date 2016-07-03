@@ -2,6 +2,23 @@ var engine;
 var canvas;
 var scene;
 var curArea;
+var repos;
+var ot;
+var nia = true;
+
+/*if (window.Worker){
+	var trackingWorker = new Worker("js/trackingWorker.js");
+	var hWorkers = true;
+	trackingWorker.onmessage = function(m) {
+		repos = new BABYLON.Vector3.FromArray(m.data);
+		//console.log("set");
+		//console.log(repos);
+	}
+} else {
+	var hWorkers = false;
+	alert("This browser does not support web workers.  This game may run slowly.  Use the latest version of Firefox or Chrome for full support");
+}*/
+var hWorkers = false;
 
 canvas = document.getElementById("viewport");
 canvas.requestPointerLock = canvas.requestPointerLock ||
@@ -43,10 +60,22 @@ function gNextPoint(position, target){
 		return(position);
 	}
 	var x1 = d*z1;
-	x1 = sx*x1;
-	z1 = sz*z1;
-	x1 = x1/50;
-	z1 = z1/50;
+	/*if (ot){
+		var td = new Date().getTime()- ot;
+		ot = new Date().getTime();
+		if (!td){
+			td = 1;
+		}
+	}else{
+		var td = 1
+	}*/
+	td = engine.getFps()/1000*16.6666666666666666666;
+	x1 = sx*x1*16;
+	z1 = sz*z1*16;
+	x1 = x1/1000;
+	z1 = z1/1000;
+	x1 /= td;
+	z1 /= td;
 	return(new BABYLON.Vector3(position['x']+x1,position['y'],position['z']+z1));
 }
 
@@ -75,39 +104,64 @@ function startGame(){
 			scene.setActiveCameraByID("Camera");
 			console.log(scene.activeCamera.name);
 			scene.registerBeforeRender(function(){
+				if (inArea(cam.position, [-0.47551,0,-13.67511], [3.5,2,3.5])&&nia){
+					nia = false;
+					if (curArea){
+						curArea = 0;
+					} else{
+						curArea = 1;
+					}
+				}else if (inArea(cam.position, [11.7052, 0, 11.70054], [1.57, 2, 1.57])&&nia){
+					nia = false;
+					if (curArea){
+						curArea = 0;
+					} else{
+						curArea = 1;
+					}
+				}else if (inArea(cam.position, [-10.94772, 0, 15.61968], [1.57, 2, 1.57])&&nia){
+					nia = false;
+					if (curArea){
+						curArea = 0;
+					} else{
+						curArea = 2;
+					}
+				}else if (inArea(cam.position, [-0.09405, 0, 27.30731], [1.57, 2, 1.57])&&nia){
+					nia = false;
+					if (curArea){
+						curArea = 0;
+					} else{
+						curArea = 2;
+					}
+				}else{
+					nia = true;
+				}
+				if (curArea === 1){
+					if (hWorkers){
+						//console.log(repos);
+						if (!repos){
+							repos = enemy1.position;
+						}
+						//console.log("ask");
+						trackingWorker.postMessage([enemy1.position, cam.position]);
+					}
+				}
 				if (overlap(cam.position, enemy1.position, [1, 1, 1])||overlap(cam.position, enemy2.position, [1, 1, 1])){
 					cam.position = new BABYLON.Vector3(0,3.811,0);
 					enemy1.position = new BABYLON.Vector3(-7.2941,1,-13.8398);
 					enemy2.position = new BABYLON.Vector3(-18.4464,1,15.517);
 					curArea = 0;
 				}
-				if (inArea(cam.position, [-0.47551,0,-13.67511], [3.5,2,3.5])){
-					if (curArea){
-						curArea = 0;
-					} else{
-						curArea = 1;
-					}
-				}else if (inArea(cam.position, [11.7052, 0, 11.70054], [1.57, 2, 1.57])){
-					if (curArea){
-						curArea = 0;
-					} else{
-						curArea = 1;
-					}
-				}else if (inArea(cam.position, [-10.94772, 0, 15.61968], [1.57, 2, 1.57])){
-					if (curArea){
-						curArea = 0;
-					} else{
-						curArea = 2;
-					}
-				}else if (inArea(cam.position, [-0.09405, 0, 27.30731], [1.57, 2, 1.57])){
-					if (curArea){
-						curArea = 0;
-					} else{
-						curArea = 2;
-					}
-				}
 				if (curArea === 1){
-					enemy1.position = gNextPoint(enemy1.position, cam.position);
+					if (hWorkers){
+						//console.log(repos);
+						enemy1.position = repos;
+						//console.log("use");
+					} else {
+						/*if (!nia){
+							ot = new Date().getTime();
+						}*/
+						enemy1.position = gNextPoint(enemy1.position, cam.position);
+					}
 				}else if (curArea === 2){
 					enemy2.position = gNextPoint(enemy2.position, cam.position);
 				}
