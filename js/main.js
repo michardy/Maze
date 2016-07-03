@@ -2,6 +2,20 @@ var engine;
 var canvas;
 var scene;
 var curArea;
+var repos;
+
+if (window.Worker){
+	var trackingWorker = new Worker("js/trackingWorker.js");
+	var hWorkers = true;
+	trackingWorker.onmessage = function(m) {
+		repos = new BABYLON.Vector3.FromArray(m.data);
+		//console.log("set");
+		//console.log(repos);
+	}
+} else {
+	var hWorkers = false;
+	alert("This browser does not support web workers.  This game may run slowly.  Use the latest version of Firefox or Chrome for full support");
+}
 
 canvas = document.getElementById("viewport");
 canvas.requestPointerLock = canvas.requestPointerLock ||
@@ -75,12 +89,6 @@ function startGame(){
 			scene.setActiveCameraByID("Camera");
 			console.log(scene.activeCamera.name);
 			scene.registerBeforeRender(function(){
-				if (overlap(cam.position, enemy1.position, [1, 1, 1])||overlap(cam.position, enemy2.position, [1, 1, 1])){
-					cam.position = new BABYLON.Vector3(0,3.811,0);
-					enemy1.position = new BABYLON.Vector3(-7.2941,1,-13.8398);
-					enemy2.position = new BABYLON.Vector3(-18.4464,1,15.517);
-					curArea = 0;
-				}
 				if (inArea(cam.position, [-0.47551,0,-13.67511], [3.5,2,3.5])){
 					if (curArea){
 						curArea = 0;
@@ -107,7 +115,29 @@ function startGame(){
 					}
 				}
 				if (curArea === 1){
-					enemy1.position = gNextPoint(enemy1.position, cam.position);
+					if (hWorkers){
+						//console.log(repos);
+						if (!repos){
+							repos = enemy1.position;
+						}
+						//console.log("ask");
+						trackingWorker.postMessage([enemy1.position, cam.position]);
+					}
+				}
+				if (overlap(cam.position, enemy1.position, [1, 1, 1])||overlap(cam.position, enemy2.position, [1, 1, 1])){
+					cam.position = new BABYLON.Vector3(0,3.811,0);
+					enemy1.position = new BABYLON.Vector3(-7.2941,1,-13.8398);
+					enemy2.position = new BABYLON.Vector3(-18.4464,1,15.517);
+					curArea = 0;
+				}
+				if (curArea === 1){
+					if (hWorkers){
+						//console.log(repos);
+						enemy1.position = repos;
+						//console.log("use");
+					} else {
+						enemy1.position = gNextPoint(enemy1.position, cam.position);
+					}
 				}else if (curArea === 2){
 					enemy2.position = gNextPoint(enemy2.position, cam.position);
 				}
