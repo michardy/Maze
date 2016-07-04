@@ -147,6 +147,7 @@ function startGame(){
 				}
 				if (overlap(cam.position, enemy1.position, [1, 1, 1])||overlap(cam.position, enemy2.position, [1, 1, 1])){
 					cam.position = new BABYLON.Vector3(0,3.811,0);
+					cam.rotation = new BABYLON.Vector3(0.4615,-1.5708,0);
 					enemy1.position = new BABYLON.Vector3(-7.2941,1,-13.8398);
 					enemy2.position = new BABYLON.Vector3(-18.4464,1,15.517);
 					curArea = 0;
