@@ -1,1 +1,1 @@
-One or more textures on this map have been created with images from Textures.com. These images may not be redistributed by default. Please visit www.textures.com for more information.
+One or more textures on these maps have been created with images from Textures.com. These images may not be redistributed by default. Please visit www.textures.com for more information.
