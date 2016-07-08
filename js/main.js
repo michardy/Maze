@@ -132,6 +132,8 @@ function startGame(){
 					} else{
 						curArea = 2;
 					}
+				} else if (inArea(cam.position, [11.66021, -11.61588, 27.63989], [8, 2, 8])){
+					alert('end!');
 				}else{
 					nia = true;
 				}
