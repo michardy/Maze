@@ -28,6 +28,7 @@ function rules(){
 			curArea = 2;
 		}
 	} else if (inArea(cam.position, [11.66021, -11.61588, 27.63989], [8, 2, 8])){
+		level++;
 		window.location.href = "/level"+level.toString()+".html";
 	}else{
 		nia = true;
