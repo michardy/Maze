@@ -94,13 +94,27 @@ function startGame(){
 			cam = scene.getCameraByID("Camera");
 			light = scene.getLightByID("FlashLight");
 			plane = scene.getMeshByID("Plane");
-			pbox = scene.getMeshByID("pbox");
-			enemy1 = scene.getMeshByID("Enemy");
-			enemy2 = scene.getMeshByID("Enemy.001");
-			//var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
-			//shadowGenerator.getShadowMap().renderList.push(plane);
-			light.parent = cam;
-			pbox.parent = cam;
+			if (level === 1){
+				pbox = scene.getMeshByID("pbox");
+				enemy1 = scene.getMeshByID("Enemy");
+				enemy2 = scene.getMeshByID("Enemy.001");
+				pbox.parent = cam;
+			} else if (level == 2){
+				wall1 = scene.getMeshByID("Cube");
+				wall2 = scene.getMeshByID("Cube.001");
+				ball = scene.getMeshByID("ball");
+				ballLight = scene.getLightByID("ballLight");
+				sun = scene.getLightByID("Sun");
+			} else {
+				wall1 = scene.getMeshByID("Cube");
+				wall2 = scene.getMeshByID("Cube.001");
+				//var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+				//shadowGenerator.getShadowMap().renderList.push(wall1);
+				//shadowGenerator.getShadowMap().renderList.push(wall2);
+			}
+			if (light){
+				light.parent = cam;
+			}
 			scene.setActiveCameraByID("Camera");
 			console.log(scene.activeCamera.name);
 			scene.registerBeforeRender(rules);

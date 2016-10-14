@@ -1,39 +1,34 @@
+var flicker = [1, 0.9, 0.9, 0.8, 0.8, 0.7, 0.7, 0.6, 0.6, 0.5, 0.5, 0.4, 0.4, 0.3, 0.3, 0.2, 0.2, 0.1, 0.1, 0, 0, 0.1, 0.1, 0.2, 0.3, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5, 0.6, 0.7, 0.7, 0.7, 0.8, 0.8, 0.9, 0.9, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0.1, 0.2, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 0];
+var lightO = false;
+var flickpos = 0;
+var blue = 1;
+var ballLight = scene.getLightByID("ballLight");
+var sun = scene.getLightByID("Sun");
+var sunUp = false;
+var upness = 0;
+
 function rules(){
-	/*if (inArea(cam.position, [-0.47551,0,-13.67511], [3.5,2,3.5])&&nia){
-		nia = false;
-		if (curArea){
-			curArea = 0;
-		} else{
-			curArea = 1;
-		}
-	}else if (inArea(cam.position, [11.7052, 0, 11.70054], [1.57, 2, 1.57])&&nia){
-		nia = false;
-		if (curArea){
-			curArea = 0;
-		} else{
-			curArea = 1;
-		}
-	} else if (inArea(cam.position, [11.66021, -11.61588, 27.63989], [8, 2, 8])){
+	if (inArea(cam.position, [-31.37777, 8.49659, -24.91884], [1.066, 1.066, 1.066]) && !(lightO)){
+		lightO = true;
+	} else if (inArea(cam.position, [-42.41933, 8.64509, -25.08034], [2, 2, 2])){
+		scene.gravity = new BABYLON.Vector3(0, 0.7, 0);
+	} else if (inArea(cam.position, [-42.41933, 160, -25.08034], [10, 10, 10])){
 		level++;
 		window.location.href = "/level"+level.toString()+".html";
-	}else{
-		nia = true;
 	}
-	if (overlap(cam.position, enemy1.position, [1, 1, 1])||overlap(cam.position, enemy2.position, [1, 1, 1])){
-		cam.position = new BABYLON.Vector3(0,3.811,0);
-		cam.rotation = new BABYLON.Vector3(0.4615,-1.5708,0);
-		enemy1.position = new BABYLON.Vector3(-7.2941,1,-13.8398);
-		enemy2.position = new BABYLON.Vector3(-18.4464,1,15.517);
-		curArea = 0;
-	}
-	if (curArea === 1){
-		if (hWorkers){
-			enemy1.position = repos;
+	if (lightO == true){
+		light.intensity = flicker[flickpos];
+		if (flickpos < 60){
+			flickpos++;
 		} else {
-			//if (!nia){
-			//	ot = new Date().getTime();
-			//}
-			enemy1.position = gNextPoint(enemy1.position, cam.position);
+			ballLight.intensity = blue/10;
+			if (blue < 10){
+				blue++;
+			}
 		}
-	}*/
+	}
+	if (sunUp){
+		upness++;
+		sun.intensity = upness/100;
+	}
 }
